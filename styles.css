@@ -1,0 +1,276 @@
+:root {
+  --ink: #14213d;
+  --accent: #f77f00;
+  --accent-soft: #ffb703;
+  --mint: #4ecdc4;
+  --paper: #fff9ec;
+  --panel: #ffffff;
+  --border: #e8edf4;
+  --shadow: 0 14px 28px rgba(20, 33, 61, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "DM Sans", sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at 10% 10%, #ffe2bd 0%, #ffe2bd00 35%),
+    radial-gradient(circle at 90% 30%, #c9fff8 0%, #c9fff800 30%),
+    linear-gradient(145deg, #f8f6ef, #fffdfa);
+  min-height: 100vh;
+}
+
+.page-glow {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(120deg, #ffffff22, #ffffff00 60%);
+  pointer-events: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Archivo Black", sans-serif;
+  margin-top: 0;
+}
+
+.hero {
+  padding: 3.5rem 1.25rem 2rem;
+  text-align: center;
+  animation: reveal 500ms ease-out;
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  color: #1d3557;
+  font-size: 0.75rem;
+}
+
+h1 {
+  max-width: 16ch;
+  margin: 0.5rem auto 0.75rem;
+  line-height: 1.1;
+}
+
+.hero p {
+  max-width: 58ch;
+  margin-inline: auto;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.2rem;
+}
+
+.layout {
+  width: min(1100px, 92vw);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding-bottom: 2.5rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid #f1ebdd;
+  border-radius: 1.1rem;
+  box-shadow: var(--shadow);
+  padding: 1.1rem;
+  animation: reveal 420ms ease-out;
+}
+
+.path-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.learner-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.learner-grid label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.path-card {
+  border: 1px solid var(--border);
+  border-radius: 0.8rem;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  padding: 0.85rem;
+}
+
+.path-card h3 {
+  margin-bottom: 0.4rem;
+}
+
+.status {
+  font-weight: 700;
+}
+
+.status.locked {
+  color: #5f6f8b;
+}
+
+.status.unlocked {
+  color: #0b6e4f;
+}
+
+.quiz-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.quiz-item {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  background: #fcfdff;
+}
+
+.quiz-options {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+
+.quiz-options label {
+  border: 1px solid #edf2f7;
+  border-radius: 0.55rem;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.leaderboard-table {
+  margin-top: 0.8rem;
+  overflow-x: auto;
+}
+
+.leaderboard-table table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  padding: 0.55rem;
+}
+
+.leaderboard-table th {
+  font-family: "Archivo Black", sans-serif;
+  font-size: 0.82rem;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+textarea,
+select,
+input[type="text"],
+input[type="number"] {
+  border: 1px solid #c7d0df;
+  border-radius: 0.5rem;
+  padding: 0.6rem;
+  font: inherit;
+  width: 100%;
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+  color: #191000;
+}
+
+.btn-secondary {
+  background: #e7f8f6;
+  color: #073b4c;
+}
+
+.quiz-result {
+  font-weight: 700;
+}
+
+.small {
+  color: #3a4d68;
+}
+
+footer {
+  text-align: center;
+  padding: 0 1rem 2rem;
+  color: #334d6e;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 920px) {
+  .layout {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #learner,
+  #path,
+  #topic-quiz,
+  #mixed-practice,
+  #leaderboard {
+    grid-column: span 2;
+  }
+
+  .panel {
+    padding: 1.4rem;
+  }
+}

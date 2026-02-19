@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unit 2 Revision: Developing a Marketing Campaign</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-glow" aria-hidden="true"></div>
+
+    <header class="hero">
+      <p class="eyebrow">Unit 2 Exam Revision</p>
+      <h1>Developing a Marketing Campaign</h1>
+      <p>
+        Focused revision for the 3-hour exam with progressive checkpoints based on
+        exactly what must be included in each activity.
+      </p>
+      <div class="hero-actions">
+        <a href="#path" class="btn btn-primary">Start Revision Path</a>
+        <a href="#topic-quiz" class="btn btn-secondary">Go To Quiz</a>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel" id="learner">
+        <h2>Learner Details And Results</h2>
+        <div class="learner-grid">
+          <label>
+            Learner Name
+            <input id="learner-name" type="text" placeholder="Enter learner name" />
+          </label>
+        </div>
+        <p id="total-score" class="quiz-result">Total score: 0/40 (0%)</p>
+        <div class="quiz-actions">
+          <button id="submit-leaderboard" class="btn btn-primary">Submit To Leaderboard</button>
+          <button id="refresh-leaderboard" class="btn btn-secondary">Refresh Leaderboard</button>
+        </div>
+        <p id="status-message" class="small" aria-live="polite"></p>
+      </section>
+
+      <section class="panel" id="leaderboard">
+        <h2>Class Leaderboard</h2>
+        <p class="small">Top scores across all learners (best attempts).</p>
+        <div id="leaderboard-table" class="leaderboard-table"></div>
+      </section>
+
+      <section class="panel" id="activity-1">
+        <h2>Activity 1 Checklist (Rationale)</h2>
+        <ul>
+          <li>Marketing aims</li>
+          <li>SMART marketing objectives</li>
+          <li>Analysis of research data on market and competitors</li>
+          <li>Evaluation of reliability of information</li>
+          <li>Evaluation of validity of information</li>
+          <li>Justification of overall rationale</li>
+          <li>Clear marketing terminology and logical structure</li>
+        </ul>
+      </section>
+
+      <section class="panel" id="activity-2">
+        <h2>Activity 2 Checklist (Campaign Plan)</h2>
+        <ul>
+          <li>Full marketing mix (7 Ps): Product, Price, Place, Promotion, People, Process, Physical Evidence</li>
+          <li>Clear marketing message</li>
+          <li>Selection of media</li>
+          <li>Campaign budget</li>
+          <li>Timescale</li>
+          <li>Format appropriate for the exam</li>
+        </ul>
+      </section>
+
+      <section class="panel" id="path">
+        <h2>Revision Path</h2>
+        <p class="small">All topics are available. Complete checkpoints in any order.</p>
+        <div id="path-cards" class="path-grid"></div>
+      </section>
+
+      <section class="panel" id="topic-quiz">
+        <h2>Checkpoint Quiz</h2>
+        <p id="active-topic" class="small"></p>
+        <div id="quiz-container" class="quiz-list"></div>
+        <div class="quiz-actions">
+          <button id="grade-quiz" class="btn btn-primary">Submit Checkpoint</button>
+          <button id="next-topic" class="btn btn-secondary">Next Topic</button>
+        </div>
+        <p id="quiz-result" class="quiz-result" aria-live="polite"></p>
+      </section>
+
+      <section class="panel" id="mixed-practice">
+        <h2>Mixed Practice (All Exam Areas)</h2>
+        <p class="small">Use this at any point to check cross-topic understanding.</p>
+        <div id="mixed-container" class="quiz-list"></div>
+        <button id="grade-mixed" class="btn btn-secondary">Grade Mixed Practice</button>
+        <p id="mixed-result" class="quiz-result" aria-live="polite"></p>
+      </section>
+
+    </main>
+
+    <footer>
+      <p>Exam-aligned revision. Scores save in your browser on this device.</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

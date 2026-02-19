@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: unit2-marketing-revision
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app --bind 0.0.0.0:$PORT
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_PATH
+        value: /var/data/leaderboard.db
+    disk:
+      name: unit2-data
+      mountPath: /var/data
+      sizeGB: 1
