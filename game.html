@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unit 2 Game Mode</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="game.css" />
+  </head>
+  <body>
+    <div class="game-wrap">
+      <header class="hero">
+        <p class="eyebrow">Unit 2 Interactive</p>
+        <h1>Marketing Campaign Challenge</h1>
+        <p>Race through scenario rounds, protect your lives, and climb the class leaderboard.</p>
+        <a class="back-link" href="/">Back To Revision App</a>
+      </header>
+
+      <main class="layout">
+        <section class="panel" id="setup-panel">
+          <h2>Start Game</h2>
+          <label>
+            Learner Name
+            <input id="learner-name" type="text" placeholder="Enter your name" />
+          </label>
+          <button id="start-game" class="btn btn-primary">Start Challenge</button>
+          <p id="setup-status" class="small" aria-live="polite"></p>
+        </section>
+
+        <section class="panel" id="game-panel" hidden>
+          <div class="stats">
+            <p><strong>Score:</strong> <span id="score">0</span></p>
+            <p><strong>Lives:</strong> <span id="lives">3</span></p>
+            <p><strong>Streak:</strong> <span id="streak">0</span></p>
+            <p><strong>Time:</strong> <span id="time-left">20</span>s</p>
+            <p><strong>Q:</strong> <span id="progress">1/16</span></p>
+          </div>
+
+          <div class="powerups">
+            <button id="fifty-fifty" class="btn btn-secondary">50/50</button>
+            <button id="extra-time" class="btn btn-secondary">+10s</button>
+          </div>
+
+          <article class="question-card">
+            <p id="question-topic" class="small"></p>
+            <h2 id="question-text"></h2>
+            <div id="options" class="options"></div>
+          </article>
+
+          <p id="round-feedback" class="result" aria-live="polite"></p>
+        </section>
+
+        <section class="panel" id="results-panel" hidden>
+          <h2>Round Complete</h2>
+          <p id="final-summary" class="result"></p>
+          <div class="actions">
+            <button id="play-again" class="btn btn-primary">Play Again</button>
+            <button id="submit-score" class="btn btn-secondary">Submit Score</button>
+            <button id="refresh-leaderboard" class="btn btn-secondary">Refresh Leaderboard</button>
+          </div>
+          <p id="submit-status" class="small" aria-live="polite"></p>
+        </section>
+
+        <section class="panel" id="leaderboard-panel">
+          <h2>Game Leaderboard</h2>
+          <div id="leaderboard-table"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="game.js"></script>
+  </body>
+</html>

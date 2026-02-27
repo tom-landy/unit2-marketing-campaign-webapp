@@ -28,6 +28,7 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 learner_name TEXT NOT NULL,
                 learner_key TEXT NOT NULL UNIQUE,
+                mode TEXT NOT NULL DEFAULT 'revision',
                 best_score INTEGER NOT NULL,
                 total_possible INTEGER NOT NULL,
                 best_percent INTEGER NOT NULL,
@@ -35,10 +36,14 @@ def init_db():
             )
             """
         )
+        cols = conn.execute("PRAGMA table_info(leaderboard)").fetchall()
+        col_names = {col["name"] for col in cols}
+        if "mode" not in col_names:
+            conn.execute("ALTER TABLE leaderboard ADD COLUMN mode TEXT NOT NULL DEFAULT 'revision'")
         conn.execute(
             """
             CREATE INDEX IF NOT EXISTS idx_leaderboard_rank
-            ON leaderboard (best_percent DESC, best_score DESC, updated_at ASC)
+            ON leaderboard (mode, best_percent DESC, best_score DESC, updated_at ASC)
             """
         )
 
@@ -51,15 +56,16 @@ def normalized_key(name: str) -> str:
     return " ".join(name.strip().lower().split())
 
 
-def compute_rank(conn, best_percent: int, best_score: int) -> int:
+def compute_rank(conn, mode: str, best_percent: int, best_score: int) -> int:
     row = conn.execute(
         """
         SELECT COUNT(*) AS better_count
         FROM leaderboard
-        WHERE best_percent > ?
-           OR (best_percent = ? AND best_score > ?)
+        WHERE mode = ?
+          AND (best_percent > ?
+           OR (best_percent = ? AND best_score > ?))
         """,
-        (best_percent, best_percent, best_score),
+        (mode, best_percent, best_percent, best_score),
     ).fetchone()
     return int(row["better_count"]) + 1
 
@@ -77,15 +83,18 @@ def api_leaderboard():
         limit = 30
     limit = max(1, min(limit, 200))
 
+    mode = str(request.args.get("mode", "revision")).strip().lower() or "revision"
+
     with get_conn() as conn:
         rows = conn.execute(
             """
             SELECT learner_name, best_score, total_possible, best_percent, updated_at
             FROM leaderboard
+            WHERE mode = ?
             ORDER BY best_percent DESC, best_score DESC, updated_at ASC
             LIMIT ?
             """,
-            (limit,),
+            (mode, limit),
         ).fetchall()
 
     entries = [
@@ -107,6 +116,7 @@ def api_leaderboard_submit():
     payload = request.get_json(silent=True) or {}
 
     learner_name = str(payload.get("learner_name", "")).strip()
+    mode = str(payload.get("mode", "revision")).strip().lower() or "revision"
     if not learner_name:
         return jsonify({"error": "learner_name is required"}), 400
     if len(learner_name) > 80:
@@ -125,7 +135,7 @@ def api_leaderboard_submit():
 
     best_score = min(best_score, total_possible)
     best_percent = round((best_score / total_possible) * 100)
-    learner_key = normalized_key(learner_name)
+    learner_key = f"{mode}:{normalized_key(learner_name)}"
     timestamp = now_iso()
 
     with get_conn() as conn:
@@ -151,19 +161,35 @@ def api_leaderboard_submit():
             conn.execute(
                 """
                 INSERT INTO leaderboard (
-                    learner_name, learner_key, best_score, total_possible, best_percent, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?)
+                    learner_name, learner_key, mode, best_score, total_possible, best_percent, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
-                (learner_name, learner_key, best_score, total_possible, best_percent, timestamp),
+                (
+                    learner_name,
+                    learner_key,
+                    mode,
+                    best_score,
+                    total_possible,
+                    best_percent,
+                    timestamp,
+                ),
             )
         elif should_update:
             conn.execute(
                 """
                 UPDATE leaderboard
-                SET learner_name = ?, best_score = ?, total_possible = ?, best_percent = ?, updated_at = ?
+                SET learner_name = ?, mode = ?, best_score = ?, total_possible = ?, best_percent = ?, updated_at = ?
                 WHERE learner_key = ?
                 """,
-                (learner_name, best_score, total_possible, best_percent, timestamp, learner_key),
+                (
+                    learner_name,
+                    mode,
+                    best_score,
+                    total_possible,
+                    best_percent,
+                    timestamp,
+                    learner_key,
+                ),
             )
 
         current = conn.execute(
@@ -175,7 +201,7 @@ def api_leaderboard_submit():
             (learner_key,),
         ).fetchone()
 
-        rank = compute_rank(conn, int(current["best_percent"]), int(current["best_score"]))
+        rank = compute_rank(conn, mode, int(current["best_percent"]), int(current["best_score"]))
 
     return jsonify(
         {

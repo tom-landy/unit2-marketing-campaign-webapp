@@ -16,6 +16,7 @@ Exam-aligned revision app for **Unit 2: Developing a Marketing Campaign**.
 - Learner name + leaderboard submission
 - Mixed-practice quiz available at any time
 - Shared class leaderboard (submit + live ranking)
+- Separate interactive Game Mode at `/game.html` (timer, lives, streaks, power-ups)
 - Progress saved in browser local storage
 
 ## Run Locally
@@ -31,6 +32,11 @@ python server.py
 ```
 
 Then visit `http://localhost:8000`.
+
+## Pages
+
+- Revision app: `http://localhost:8000/`
+- Interactive game: `http://localhost:8000/game.html`
 
 ## Deploy On Render
 
