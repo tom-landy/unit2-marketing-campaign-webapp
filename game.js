@@ -28,11 +28,13 @@ const questionBank = [
 
 const learnerNameInput = document.getElementById("learner-name");
 const startButton = document.getElementById("start-game");
+const openLeaderboardButton = document.getElementById("open-leaderboard");
 const setupStatus = document.getElementById("setup-status");
 
 const setupPanel = document.getElementById("setup-panel");
 const gamePanel = document.getElementById("game-panel");
 const resultsPanel = document.getElementById("results-panel");
+const leaderboardPanel = document.getElementById("leaderboard-panel");
 
 const scoreEl = document.getElementById("score");
 const livesEl = document.getElementById("lives");
@@ -50,9 +52,14 @@ const extraTimeButton = document.getElementById("extra-time");
 const finalSummary = document.getElementById("final-summary");
 const submitButton = document.getElementById("submit-score");
 const refreshButton = document.getElementById("refresh-leaderboard");
+const viewResultsLeaderboardButton = document.getElementById("view-results-leaderboard");
+const backToHomeButton = document.getElementById("back-to-home");
 const playAgainButton = document.getElementById("play-again");
 const submitStatus = document.getElementById("submit-status");
+const leaderboardStatus = document.getElementById("leaderboard-status");
 const leaderboardTable = document.getElementById("leaderboard-table");
+
+const LEADERBOARD_REFRESH_MS = 5000;
 
 let state = {
   learnerName: "",
@@ -67,6 +74,40 @@ let state = {
   usedExtraTime: false,
   locked: false
 };
+
+let leaderboardRefreshId = null;
+
+function showPanel(panel) {
+  setupPanel.hidden = panel !== "setup";
+  gamePanel.hidden = panel !== "game";
+  resultsPanel.hidden = panel !== "results";
+  leaderboardPanel.hidden = panel !== "leaderboard";
+
+  if (panel === "leaderboard") {
+    startLeaderboardAutoRefresh();
+    fetchLeaderboard();
+    return;
+  }
+
+  stopLeaderboardAutoRefresh();
+}
+
+function startLeaderboardAutoRefresh() {
+  if (leaderboardRefreshId) {
+    return;
+  }
+  leaderboardRefreshId = window.setInterval(() => {
+    fetchLeaderboard({ silent: true });
+  }, LEADERBOARD_REFRESH_MS);
+}
+
+function stopLeaderboardAutoRefresh() {
+  if (!leaderboardRefreshId) {
+    return;
+  }
+  window.clearInterval(leaderboardRefreshId);
+  leaderboardRefreshId = null;
+}
 
 function shuffle(array) {
   const copy = [...array];
@@ -241,16 +282,18 @@ function useExtraTime() {
 
 function endGame() {
   clearTimer();
-  gamePanel.hidden = true;
-  resultsPanel.hidden = false;
+  showPanel("results");
 
   const maxScore = QUESTION_COUNT * (100 + ROUND_TIME * 3 + 60);
   const percent = Math.round((state.score / maxScore) * 100);
   finalSummary.textContent = `Final score: ${state.score} (${percent}%). Lives remaining: ${Math.max(0, state.lives)}.`;
 }
 
-async function fetchLeaderboard() {
-  leaderboardTable.innerHTML = "<p class=\"small\">Loading...</p>";
+async function fetchLeaderboard({ silent = false } = {}) {
+  if (!silent) {
+    leaderboardTable.innerHTML = "<p class=\"small\">Loading...</p>";
+    leaderboardStatus.textContent = "Refreshing leaderboard...";
+  }
   try {
     const response = await fetch(`/api/leaderboard?limit=25&mode=${GAME_MODE}`);
     if (!response.ok) {
@@ -260,6 +303,7 @@ async function fetchLeaderboard() {
     const rows = payload.entries || [];
     if (!rows.length) {
       leaderboardTable.innerHTML = "<p class=\"small\">No game submissions yet.</p>";
+      leaderboardStatus.textContent = "Waiting for the first completed game.";
       return;
     }
 
@@ -278,8 +322,12 @@ async function fetchLeaderboard() {
         </tbody>
       </table>
     `;
+    leaderboardStatus.textContent = `Live leaderboard. Last updated ${new Date().toLocaleTimeString()}.`;
   } catch {
-    leaderboardTable.innerHTML = "<p class=\"small\">Leaderboard unavailable.</p>";
+    if (!silent) {
+      leaderboardTable.innerHTML = "<p class=\"small\">Leaderboard unavailable.</p>";
+    }
+    leaderboardStatus.textContent = "Leaderboard unavailable right now.";
   }
 }
 
@@ -309,7 +357,7 @@ async function submitScore() {
 
     const payload = await response.json();
     submitStatus.textContent = `Score submitted. Rank: #${payload.rank}.`;
-    fetchLeaderboard();
+    showPanel("leaderboard");
   } catch {
     submitStatus.textContent = "Submission failed. Check deployment and try again.";
   }
@@ -341,28 +389,32 @@ function startGame() {
 
   localStorage.setItem("unit2_game_name", learnerName);
 
-  setupPanel.hidden = true;
-  resultsPanel.hidden = true;
-  gamePanel.hidden = false;
-
   fiftyButton.disabled = false;
   extraTimeButton.disabled = false;
+  showPanel("game");
   renderQuestion();
 }
 
 function resetToSetup() {
   clearTimer();
-  setupPanel.hidden = false;
-  gamePanel.hidden = true;
-  resultsPanel.hidden = true;
   feedbackEl.textContent = "";
+  showPanel("setup");
+}
+
+function openLeaderboardScreen() {
+  clearTimer();
+  feedbackEl.textContent = "";
+  showPanel("leaderboard");
 }
 
 startButton.addEventListener("click", startGame);
+openLeaderboardButton.addEventListener("click", openLeaderboardScreen);
 fiftyButton.addEventListener("click", useFiftyFifty);
 extraTimeButton.addEventListener("click", useExtraTime);
 submitButton.addEventListener("click", submitScore);
 refreshButton.addEventListener("click", fetchLeaderboard);
+viewResultsLeaderboardButton.addEventListener("click", openLeaderboardScreen);
+backToHomeButton.addEventListener("click", resetToSetup);
 playAgainButton.addEventListener("click", resetToSetup);
 
 const savedName = localStorage.getItem("unit2_game_name");
@@ -370,4 +422,4 @@ if (savedName) {
   learnerNameInput.value = savedName;
 }
 
-fetchLeaderboard();
+showPanel("setup");

@@ -93,6 +93,14 @@ input {
   margin-bottom: 0.8rem;
 }
 
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .question-card {
   border: 1px solid var(--border);
   border-radius: 0.75rem;
@@ -172,4 +180,10 @@ input {
   border-bottom: 1px solid var(--border);
   padding: 0.5rem;
   text-align: left;
+}
+
+@media (max-width: 640px) {
+  .leaderboard-header {
+    flex-direction: column;
+  }
 }

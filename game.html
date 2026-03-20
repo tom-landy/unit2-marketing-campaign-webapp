@@ -28,7 +28,10 @@
             Learner Name
             <input id="learner-name" type="text" placeholder="Enter your name" />
           </label>
-          <button id="start-game" class="btn btn-primary">Start Challenge</button>
+          <div class="actions">
+            <button id="start-game" class="btn btn-primary">Start Challenge</button>
+            <button id="open-leaderboard" class="btn btn-secondary">View Leaderboard</button>
+          </div>
           <p id="setup-status" class="small" aria-live="polite"></p>
         </section>
 
@@ -61,13 +64,24 @@
           <div class="actions">
             <button id="play-again" class="btn btn-primary">Play Again</button>
             <button id="submit-score" class="btn btn-secondary">Submit Score</button>
-            <button id="refresh-leaderboard" class="btn btn-secondary">Refresh Leaderboard</button>
+            <button id="view-results-leaderboard" class="btn btn-secondary">View Leaderboard</button>
           </div>
           <p id="submit-status" class="small" aria-live="polite"></p>
         </section>
 
-        <section class="panel" id="leaderboard-panel">
-          <h2>Game Leaderboard</h2>
+        <section class="panel" id="leaderboard-panel" hidden>
+          <div class="leaderboard-header">
+            <div>
+              <h2>Game Leaderboard</h2>
+              <p id="leaderboard-status" class="small">
+                Auto-refreshes every 5 seconds while this screen is open.
+              </p>
+            </div>
+            <div class="actions">
+              <button id="back-to-home" class="btn btn-secondary">Back</button>
+              <button id="refresh-leaderboard" class="btn btn-secondary">Refresh Now</button>
+            </div>
+          </div>
           <div id="leaderboard-table"></div>
         </section>
       </main>

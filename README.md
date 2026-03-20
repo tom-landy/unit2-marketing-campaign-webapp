@@ -17,6 +17,7 @@ Exam-aligned revision app for **Unit 2: Developing a Marketing Campaign**.
 - Mixed-practice quiz available at any time
 - Shared class leaderboard (submit + live ranking)
 - Separate interactive Game Mode at `/game.html` (timer, lives, streaks, power-ups)
+- Dedicated game leaderboard screen with 5-second auto-refresh
 - Progress saved in browser local storage
 
 ## Run Locally
